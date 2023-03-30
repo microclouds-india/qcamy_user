@@ -23,6 +23,7 @@ class CameraRepairNotifier extends ChangeNotifier {
     required String address,
     required String equipmentName,
     required String description,
+    required String warranty,
     required List<XFile> imageList,
   }) async {
     loading(true);
@@ -35,6 +36,7 @@ class CameraRepairNotifier extends ChangeNotifier {
         address: address,
         equipmentName: equipmentName,
         description: description,
+        warranty: warranty,
         imageList: imageList,
       );
 

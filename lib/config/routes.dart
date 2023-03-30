@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qcamyapp/views/authentication/mobileAuth.view.dart';
 import 'package:qcamyapp/views/authentication/verifyOtp.view.dart';
+import 'package:qcamyapp/views/help/helpPage.dart';
 import 'package:qcamyapp/views/home/drawerViews/enquire_product.dart';
 import 'package:qcamyapp/views/home/drawerViews/exchange_product.dart';
 import 'package:qcamyapp/views/home/drawerViews/firmware/firmware.view.dart';
@@ -63,7 +64,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/showAllRentalShopsView': (context) => const ShowAllRentalShopsView(),
   // '/cameraView': (context) => const CameraView(),
   // '/usedProductsView': (context) => const UsedProductsView(),
-  '/offerProductDetailsView': (context) => const OfferProductDetailsView(),
+  '/offerProductDetailsView': (context) => OfferProductDetailsView(),
   '/cartView': (context) => CartView(),
   '/paymentOptionsView': (context) => const PaymentOptionsView(),
   '/addAddressView': (context) => AddAddressView(),
@@ -93,4 +94,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/showEnquireProduct': (context) => const ShowEnquireProduct(),
   '/showExchangeProduct': (context) => const ShowExchangeProduct(),
   '/searchRentalProductView': (context) => const SearchRentalProductView(),
+  '/helpPage': (context) => HelpPage(),
 };

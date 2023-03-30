@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qcamyapp/common/ui/Ui.dart';
 import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/repository/rentalShopSearch/rentalShopSearch.notifier.dart';
 import 'package:qcamyapp/repository/rental_equipments/rental_equipments.notifier.dart';
 import 'package:qcamyapp/views/home/drawerViews/my_rentals/rental_details.view.dart';
-import 'package:qcamyapp/views/home/rentalShopsTabViews/searchEquipments.view.dart';
 import 'package:qcamyapp/widgets/searchBar.widget.dart';
 
 class SearchRentalProductView extends StatefulWidget {

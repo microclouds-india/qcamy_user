@@ -362,6 +362,19 @@ class MenuDrawer extends StatelessWidget {
                 ),
               ),
               DrawerItem(
+                  title: "Help",
+                  icon: Icons.help,
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/helpPage");
+                  }),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Divider(
+                  color: Colors.grey.shade500,
+                  height: 1,
+                ),
+              ),
+              DrawerItem(
                 title: "Logout",
                 icon: Icons.logout_outlined,
                 onTap: () async {

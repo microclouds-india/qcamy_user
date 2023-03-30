@@ -59,6 +59,8 @@ dependencies:
   video_player: ^2.4.9
   timeline_tile: ^2.0.0
   reorderable_grid_view: ^2.2.5
+  toggle_switch: ^1.2.0
+  flutter_rating_bar: ^4.0.1
 
 # pdf download
   permission_handler: ^10.2.0

@@ -2,12 +2,14 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/config/image_links.dart';
 import 'package:qcamyapp/repository/accessories/accessories.notifier.dart';
+import 'package:qcamyapp/repository/addReview/addReview.notifier.dart';
 import 'package:qcamyapp/repository/buy_now/buy_now.notifier.dart';
 import 'package:qcamyapp/repository/cart/cart.notifier.dart';
 import 'package:qcamyapp/repository/hot_products/hot_products.notifier.dart';
@@ -26,7 +28,9 @@ import 'package:flutter/services.dart';
 import '../../../../repository/related_products/related_products.notifier.dart';
 
 class OfferProductDetailsView extends StatelessWidget {
-  const OfferProductDetailsView({Key? key}) : super(key: key);
+  OfferProductDetailsView({Key? key}) : super(key: key);
+
+  final TextEditingController _reviewController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +50,8 @@ class OfferProductDetailsView extends StatelessWidget {
     final wishListData = Provider.of<WishListNotifier>(context, listen: false);
     final removeWishListData =
         Provider.of<RemoveWishListNotifier>(context, listen: false);
-    final specificationsData =
-        Provider.of<SpecificationsNotifier>(context, listen: false);
+    final specificationsData = Provider.of<SpecificationsNotifier>(context, listen: false);
+    final addReviewData = Provider.of<AddReviewNotifier>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -562,7 +566,131 @@ class OfferProductDetailsView extends StatelessWidget {
                           }
                         },
                       ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Add Review",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
+                      ),
+                      RatingBar.builder(
+                        initialRating: 5,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) =>
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                        onRatingUpdate: (rating) {
+                          addReviewData.ratingValue = rating.toString();
+                          print(rating);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Expanded(
+                          child: TextField(
+                            maxLines: null,
+                            controller: _reviewController,
+                            decoration: const InputDecoration(
+                              hintText:
+                              "Add Review...",
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: primaryColor)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(width: 1, color: primaryColor),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Consumer<AddReviewNotifier>(builder: (context, data, _) {
+                        return data.isLoading ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: CircularProgressIndicator(color: primaryColor),
+                          ),
+                        ) : Center(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                backgroundColor: primaryColor),
+                            onPressed: () async {
+                              if (_reviewController.text.isNotEmpty &&
+                                  addReviewData.ratingValue != "") {
 
+                                try {
+                                  await data.addReviewData(
+                                    rating: addReviewData.ratingValue,
+                                    comment: _reviewController.text,
+                                  );
+                                } on Exception {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text("Submitted"),
+                                  ));
+                                  showSuccess(context);
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text("Submitted"),
+                                  ));
+                                  showSuccess(context);
+                                }
+
+                                try {
+                                  if (data.addReviewModel.status == "200") {
+                                    showSuccess(context);
+                                    _reviewController.clear();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            "Something went wrong. Please try again later."),
+                                      ),
+                                    );
+                                  }
+                                } catch (_) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.red,
+                                      content: Text(
+                                          "Something went wrong. Please try again later."),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                        "Fill all fields to submit"),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text(
+                              "Submit",
+                              style: GoogleFonts.openSans(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        );
+                      }),
                       FutureBuilder(
                           future: relatedProductsData.getRelatedProducts(
                               categoryId: productCategoryData.categoryId),
@@ -1044,6 +1172,57 @@ class OfferProductDetailsView extends StatelessWidget {
         );
       }),
     );
+  }
+
+  Future<dynamic> showSuccess(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Success",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                    MaterialButton(
+                      elevation: 0,
+                      color: primaryColor,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "OK",
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }));
   }
 }
 

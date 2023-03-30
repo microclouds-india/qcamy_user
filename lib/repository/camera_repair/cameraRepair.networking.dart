@@ -48,6 +48,7 @@ class CameraRepairNetworking {
     required String address,
     required String equipmentName,
     required String description,
+    required String warranty,
     required List<XFile>? imageList,
   }) async {
     try {
@@ -57,6 +58,7 @@ class CameraRepairNetworking {
       request.fields['phone'] = mobileNumber;
       request.fields['address'] = address;
       request.fields['equipment_name'] = equipmentName;
+      request.fields['warranty'] = warranty;
       request.fields['descri'] = description;
 
       //add multiple image to the request

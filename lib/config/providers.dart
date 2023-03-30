@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:qcamyapp/repository/adBanner/sliderAdBanner.notifier.dart';
+import 'package:qcamyapp/repository/addReview/addReview.notifier.dart';
 import 'package:qcamyapp/repository/authentication/auth.notifier.dart';
 import 'package:qcamyapp/repository/book_photographer/book_photographer.notifier.dart';
 import 'package:qcamyapp/repository/cart/cart.notifier.dart';
@@ -12,6 +13,7 @@ import 'package:qcamyapp/repository/exchange_product/exchange_product.notifier.d
 import 'package:qcamyapp/repository/exchange_product_details/exchange_product_details.notifier.dart';
 import 'package:qcamyapp/repository/firmware/firmware.notifier.dart';
 import 'package:qcamyapp/repository/firmwareSearch/firmwareSearch.notifier.dart';
+import 'package:qcamyapp/repository/help/help.notifier.dart';
 import 'package:qcamyapp/repository/location/update_location.notifier.dart';
 import 'package:qcamyapp/repository/myOrders/my_orders.notifier.dart';
 import 'package:qcamyapp/repository/notification/notification.notifier.dart';
@@ -97,4 +99,6 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<SpecificationsNotifier>(create: (context) => SpecificationsNotifier()),
   ChangeNotifierProvider<TrackingStatusNotifier>(create: (context) => TrackingStatusNotifier()),
   ChangeNotifierProvider<RentalShopSearchNotifier>(create: (context) => RentalShopSearchNotifier()),
+  ChangeNotifierProvider<HelpNotifier>(create: (context) => HelpNotifier()),
+  ChangeNotifierProvider<AddReviewNotifier>(create: (context) => AddReviewNotifier()),
 ];

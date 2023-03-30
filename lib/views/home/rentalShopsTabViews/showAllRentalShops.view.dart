@@ -14,9 +14,10 @@ class ShowAllRentalShopsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final _showAllData = Provider.of<ShowAllNotifier>(context, listen: false);
-    final _rentalEquipmentsData =
-        Provider.of<RentalEquipmentsNotifier>(context, listen: false);
+    final _rentalEquipmentsData = Provider.of<RentalEquipmentsNotifier>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
@@ -66,8 +67,7 @@ class ShowAllRentalShopsView extends StatelessWidget {
                         onTap: () async {
                           //store equipment rental shop id to get rental shop/equipment details
 
-                          _rentalEquipmentsData.rentalShopId =
-                              data.dataModel.data[index].id;
+                          _rentalEquipmentsData.rentalShopId = data.dataModel.data[index].id;
                           Navigator.pushNamed(context, '/searchEquipmentsView');
                         },
                       );

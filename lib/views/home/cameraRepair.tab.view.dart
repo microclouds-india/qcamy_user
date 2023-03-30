@@ -14,6 +14,7 @@ import 'package:qcamyapp/repository/camera_repair/cameraRepair.notifier.dart';
 import 'package:qcamyapp/views/main.view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qcamyapp/widgets/booking_button.widget.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../repository/address/address.notifier.dart';
 import '../../repository/cart/cart.notifier.dart';
@@ -35,6 +36,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _equipmentNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  late String warranty = "yes";
   @override
   Widget build(BuildContext context) {
     //func to select image from gallery
@@ -170,6 +172,35 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
               maxLines: 5,
               controller: _descriptionController,
             ),
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Row(
+                  children: [
+                    Text('Warranty?'),
+                    Spacer(),
+                    ToggleSwitch(
+                      initialLabelIndex: 0,
+                      totalSwitches: 2,
+                      activeBgColor: [primaryColor],
+                      inactiveFgColor: Colors.white,
+                      labels: [
+                        'Yes',
+                        'No',
+                      ],
+                      onToggle: (index) {
+                        if(index == 0){
+                          warranty = "yes";
+                        }else{
+                          warranty = "no";
+                        }
+                        print('switched to: $warranty');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
             //button to select images
             Container(
               alignment: Alignment.topLeft,
@@ -249,6 +280,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                               _mobileNumberController.text.isNotEmpty &&
                               _equipmentNameController.text.isNotEmpty &&
                               _addressController.text.isNotEmpty &&
+                              warranty.isNotEmpty &&
                               imageFileList!.isNotEmpty) {
                             LocalStorage localStorage = LocalStorage();
                             final String? token = await localStorage.getToken();
@@ -261,6 +293,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                                 address: _addressController.text,
                                 equipmentName: _equipmentNameController.text,
                                 description: _descriptionController.text,
+                                warranty: warranty,
                                 imageList: imageFileList!,
                               );
                             } on Exception {

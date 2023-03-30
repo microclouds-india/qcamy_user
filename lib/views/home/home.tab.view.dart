@@ -608,10 +608,8 @@ class HomeTabView extends StatelessWidget {
                                 networkImage:
                                     brandsData.brandsModel.data[index].image,
                                 ontap: () {
-                                  productsData.categoryName = brandsData
-                                      .brandsModel.data[index].brandName;
-                                  productsData.brandId =
-                                      brandsData.brandsModel.data[index].id;
+                                  productsData.categoryName = brandsData.brandsModel.data[index].brandName;
+                                  productsData.brandId = brandsData.brandsModel.data[index].id;
                                   Navigator.pushNamed(
                                       context, "/brandProductsView");
                                 });
