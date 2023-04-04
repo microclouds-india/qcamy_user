@@ -167,7 +167,6 @@ class _BookEquipmentViewState extends State<BookEquipmentView> {
                   ),
                   onChanged: (val) {
                     final values = val.split(" ");
-
                     bookingTime = values[1];
                     bookingDate = values[0];
                   }),

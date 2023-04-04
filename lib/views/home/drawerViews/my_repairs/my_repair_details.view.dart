@@ -46,12 +46,11 @@ class MyCameraRepairDetailsView extends StatelessWidget {
                       orderNumber: myRepairsData.repairDetailsModel.data[0].id,
                       orderStatus: "Submitted",
                       date: myRepairsData.repairDetailsModel.data[0].date,
-                      equipmentName: myRepairsData
-                          .repairDetailsModel.data[0].equipmentName,
+                      warranty: myRepairsData.repairDetailsModel.data[0].warranty,
+                      equipmentName: myRepairsData.repairDetailsModel.data[0].equipmentName,
                       address: myRepairsData.repairDetailsModel.data[0].address,
                       userName: myRepairsData.repairDetailsModel.data[0].name,
-                      complaintDescription:
-                          myRepairsData.repairDetailsModel.data[0].descri,
+                      complaintDescription: myRepairsData.repairDetailsModel.data[0].descri,
                       phone: myRepairsData.repairDetailsModel.data[0].phone),
                   Padding(
                     padding: const EdgeInsets.only(left: 15, top: 5),
@@ -80,6 +79,7 @@ class OrderDetails extends StatelessWidget {
     required this.orderNumber,
     required this.orderStatus,
     required this.date,
+    required this.warranty,
     required this.equipmentName,
     required this.address,
     required this.userName,
@@ -89,6 +89,7 @@ class OrderDetails extends StatelessWidget {
 
   final String orderNumber;
   final String date;
+  final String warranty;
   final String equipmentName;
   final String address;
   final String userName;
@@ -159,6 +160,13 @@ class OrderDetails extends StatelessWidget {
                       OrderElement(
                         title: "Date",
                         value: date,
+                        keySize: 16,
+                        valueSize: 16,
+                      ),
+                      SizedBox(height: 5),
+                      OrderElement(
+                        title: "Warranty",
+                        value: warranty,
                         keySize: 16,
                         valueSize: 16,
                       ),

@@ -57,8 +57,7 @@ class WishListView extends StatelessWidget {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         mainAxisExtent: 250, crossAxisCount: 2),
                     itemBuilder: (context, index) {
-                      return Consumer<WishListNotifier>(
-                          builder: (context, data, _) {
+                      return Consumer<WishListNotifier>(builder: (context, data, _) {
                             return WishListProductsList(
                                 name: wishListData.wishListModel.data[index].productName,
                                 price: wishListData.wishListModel.data[index].price,

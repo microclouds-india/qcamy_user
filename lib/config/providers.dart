@@ -27,6 +27,7 @@ import 'package:qcamyapp/repository/rental_equipments/rental_equipments.notifier
 import 'package:qcamyapp/repository/search/search.notifier.dart';
 import 'package:qcamyapp/repository/search/showAll.notifier.dart';
 import 'package:qcamyapp/repository/specifications/specifications.notifier.dart';
+import 'package:qcamyapp/repository/supportQuestions/supportQuestions.notifier.dart';
 import 'package:qcamyapp/repository/together_product/together_product.notifier.dart';
 import 'package:qcamyapp/repository/trackingStatus/trackingStatus.notifier.dart';
 import 'package:qcamyapp/repository/userProfile/userProfile.notifier.dart';
@@ -101,4 +102,5 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<RentalShopSearchNotifier>(create: (context) => RentalShopSearchNotifier()),
   ChangeNotifierProvider<HelpNotifier>(create: (context) => HelpNotifier()),
   ChangeNotifierProvider<AddReviewNotifier>(create: (context) => AddReviewNotifier()),
+  ChangeNotifierProvider<SupportQuestionsNotifier>(create: (context) => SupportQuestionsNotifier()),
 ];

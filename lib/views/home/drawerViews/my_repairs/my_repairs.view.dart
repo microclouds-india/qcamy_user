@@ -12,8 +12,7 @@ class MyCameraRepairsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myRepairsData =
-        Provider.of<MyRepairsNotifier>(context, listen: false);
+    final myRepairsData = Provider.of<MyRepairsNotifier>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: primaryColor,

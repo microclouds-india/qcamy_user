@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/core/token_storage/storage.dart';
 import 'package:qcamyapp/repository/help/help.notifier.dart';
+import 'package:qcamyapp/repository/supportQuestions/supportQuestions.notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpPage extends StatelessWidget {
@@ -16,6 +17,9 @@ class HelpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final supportQuestionsData = Provider.of<SupportQuestionsNotifier>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
@@ -46,7 +50,7 @@ class HelpPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(15.0),
@@ -61,7 +65,6 @@ class HelpPage extends StatelessWidget {
                   ],
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -74,21 +77,17 @@ class HelpPage extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Expanded(
-                        child: TextField(
-                          maxLines: null,
-                          controller: _questionController,
-                          decoration: const InputDecoration(
-                            hintText:
-                                "Have a question? Ask or enter a search term here..",
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: primaryColor)),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 1, color: primaryColor),
-                            ),
+                    Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextField(
+                        controller: _questionController,
+                        decoration: const InputDecoration(
+                          hintText: "Have a question? Ask or enter a search term here..",
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: primaryColor)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 1, color: primaryColor),
                           ),
                         ),
                       ),
@@ -249,6 +248,89 @@ class HelpPage extends StatelessWidget {
                 ],
               ),
             ),
+            FutureBuilder(
+                future: supportQuestionsData.allSupportQuestions(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (supportQuestionsData.supportQuestionsModel.data.isNotEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "All Questions and Answers",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: supportQuestionsData.supportQuestionsModel.data.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                            "Q: ${supportQuestionsData.supportQuestionsModel.data[index].question}",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.black),
+                                          ),
+                                          margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                            "A: ${supportQuestionsData.supportQuestionsModel.data[index].answer}",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.grey),
+                                          ),
+                                          margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+                                        child: Text(
+                                          supportQuestionsData.supportQuestionsModel.data[index].name,
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ],
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  } else if (snapshot.hasError) {
+                    return SizedBox();
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                        color: primaryColor),
+                  );
+                }),
           ],
         ),
       ),

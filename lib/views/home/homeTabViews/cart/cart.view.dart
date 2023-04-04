@@ -137,7 +137,7 @@ class CartView extends StatelessWidget {
                               ),
                             );
                           }),
-                      SizedBox(height: 50),
+                      SizedBox(height: 10),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -453,147 +453,149 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    image,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.network(
-                        noImage,
-                        height: 100,
-                        width: 100,
-                      );
-                    },
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.contain,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      image,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          noImage,
+                          height: 100,
+                          width: 100,
+                        );
+                      },
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 160,
-                      child: Text(
-                        name,
-                        style: GoogleFonts.openSans(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Text(
-                          // offerPrice == ""
-                          //     ? "Price: ₹$price"
-                          //     : "Price: ₹$offerPrice",
-                          "₹$price",
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 160,
+                        child: Text(
+                          name,
                           style: GoogleFonts.openSans(
-                              fontSize: 14, fontWeight: FontWeight.w600),
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        offerPercentage != ""
-                            ? Container(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10, bottom: 2, top: 2),
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: Text(
-                                  offerPercentage == ""
-                                      ? ""
-                                      : "$offerPercentage%",
-                                  style: GoogleFonts.openSans(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            : SizedBox(),
-                      ],
-                    ),
-                    // Text("Quantity: $quantity",
-                    //     style: GoogleFonts.openSans(
-                    //         fontSize: 14, fontWeight: FontWeight.w500)),
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.remove,
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            // offerPrice == ""
+                            //     ? "Price: ₹$price"
+                            //     : "Price: ₹$offerPrice",
+                            "₹$price",
+                            style: GoogleFonts.openSans(
+                                fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          offerPercentage != ""
+                              ? Container(
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 2, top: 2),
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Text(
+                                    offerPercentage == ""
+                                        ? ""
+                                        : "$offerPercentage%",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
+                      ),
+                      // Text("Quantity: $quantity",
+                      //     style: GoogleFonts.openSans(
+                      //         fontSize: 14, fontWeight: FontWeight.w500)),
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                              onPressed: decreaseQty,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.remove,
+                                ),
+                                onPressed: decreaseQty,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: Text(
-                            quantity,
-                            style: GoogleFonts.openSans(fontSize: 16),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: increaseQty,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            child: Text(
+                              quantity,
+                              style: GoogleFonts.openSans(fontSize: 16),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text("₹$totalPrice",
-                    style: GoogleFonts.openSans(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                offerPercentage == ""
-                    ? SizedBox(height: 10)
-                    : Text("₹$cutPrice",
-                        style: GoogleFonts.openSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.lineThrough)),
-                SizedBox(height: 15),
-                GestureDetector(
+                          SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: increaseQty,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("₹$totalPrice",
+                      style: GoogleFonts.openSans(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
+                  offerPercentage == ""
+                      ? SizedBox(height: 10)
+                      : Text("₹$cutPrice",
+                          style: GoogleFonts.openSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.lineThrough)),
+                  SizedBox(height: 15),
+                  GestureDetector(
                     onTap: () {
                       showDialog(
                           context: context,
@@ -630,10 +632,103 @@ class CartItem extends StatelessWidget {
                         ),
                         Text("Remove"),
                       ],
-                    )),
-              ],
-            ),
-          ],
-        ));
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Container(
+            width: double.infinity,
+            height: 1,
+            color: Colors.grey,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0,
+                  ),
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.black,
+                    size: 20.0,
+                  ),
+                  label: Text(
+                    'Save it for later',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 50,
+                color: Colors.grey,
+              ),
+              Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0,
+                  ),
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                    size: 20.0,
+                  ),
+                  label: Text(
+                    'Remove',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 50,
+                color: Colors.grey,
+              ),
+              Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0,
+                  ),
+                  icon: Icon(
+                    Icons.save_alt,
+                    color: Colors.black,
+                    size: 20.0,
+                  ),
+                  label: Text(
+                    'Buy this now',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
+          Container(
+            width: double.infinity,
+            height: 1,
+            color: Colors.grey,
+          ),
+        ],
+      ),
+    );
   }
 }

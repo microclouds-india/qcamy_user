@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:qcamyapp/common/ui/Ui.dart';
 import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/config/image_links.dart';
 import 'package:qcamyapp/repository/accessories/accessories.notifier.dart';
@@ -50,7 +51,8 @@ class OfferProductDetailsView extends StatelessWidget {
     final wishListData = Provider.of<WishListNotifier>(context, listen: false);
     final removeWishListData =
         Provider.of<RemoveWishListNotifier>(context, listen: false);
-    final specificationsData = Provider.of<SpecificationsNotifier>(context, listen: false);
+    final specificationsData =
+        Provider.of<SpecificationsNotifier>(context, listen: false);
     final addReviewData = Provider.of<AddReviewNotifier>(context, listen: false);
 
     return Scaffold(
@@ -475,34 +477,43 @@ class OfferProductDetailsView extends StatelessWidget {
                       ),
                       EquipmentDetails(
                         title: "Description",
-                        details: productData.viewProductModel.data[0].description.toString(),
+                        details: productData
+                            .viewProductModel.data[0].description
+                            .toString(),
                         // details:
                         //     "NIKON D5600 DSLR Camera Body with Single Lens: AF-P DX Nikkor 18-55 MM F/3.5-5.6G VR  (Black),Memory card, DK-25 Rubber Eyecup, BF-1B Body Cap, EN-EL14a Rechargeable Li-ion Battery (with Terminal Cover), AN-DC3 Strap, MH-24 Battery Charger ",
                       ),
-                      if(productData.viewProductModel.data[0].traderName != "")
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: Row(
-                          children: [
-                            Text("Sold by ",
-                            style: TextStyle(
-                            ),),
-                            Text("${productData.viewProductModel.data[0].traderName.toString()}",
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),),
-                            Text(" and fullfilled by",
-                              style: TextStyle(
-                              ),),
-                            Text(" Qcamy",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),),
-                          ],
+                      if (productData.viewProductModel.data[0].traderName != "")
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Sold by ",
+                                style: TextStyle(),
+                              ),
+                              Text(
+                                "${productData.viewProductModel.data[0].traderName.toString()}",
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                " and fullfilled by",
+                                style: TextStyle(),
+                              ),
+                              Text(
+                                " Qcamy",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       FutureBuilder(
                         future: specificationsData
                             .getSpecifications(productData.productId),
@@ -541,11 +552,22 @@ class OfferProductDetailsView extends StatelessWidget {
                                               return Row(
                                                 children: [
                                                   Expanded(
-                                                    child: Text(specificationsData.specificationsModel.data[index].specCat),
+                                                    child: Text(
+                                                        specificationsData
+                                                            .specificationsModel
+                                                            .data[index]
+                                                            .specCat),
                                                   ),
                                                   Expanded(
-                                                    child: Text(specificationsData.specificationsModel.data[index].catValue + " " +
-                                                        specificationsData.specificationsModel.data[index].measure),
+                                                    child: Text(specificationsData
+                                                            .specificationsModel
+                                                            .data[index]
+                                                            .catValue +
+                                                        " " +
+                                                        specificationsData
+                                                            .specificationsModel
+                                                            .data[index]
+                                                            .measure),
                                                   ),
                                                 ],
                                               );
@@ -560,7 +582,8 @@ class OfferProductDetailsView extends StatelessWidget {
                             return Center(
                               child: SizedBox(
                                 width: 40,
-                                child: const CircularProgressIndicator(color: primaryColor),
+                                child: const CircularProgressIndicator(
+                                    color: primaryColor),
                               ),
                             );
                           }
@@ -584,11 +607,10 @@ class OfferProductDetailsView extends StatelessWidget {
                         allowHalfRating: true,
                         itemCount: 5,
                         itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) =>
-                            Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
                         onRatingUpdate: (rating) {
                           addReviewData.ratingValue = rating.toString();
                           print(rating);
@@ -596,101 +618,245 @@ class OfferProductDetailsView extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.all(10.0),
-                        child: Expanded(
-                          child: TextField(
-                            maxLines: null,
-                            controller: _reviewController,
-                            decoration: const InputDecoration(
-                              hintText:
-                              "Add Review...",
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: primaryColor)),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(width: 1, color: primaryColor),
-                              ),
+                        child: TextField(
+                          controller: _reviewController,
+                          decoration: const InputDecoration(
+                            hintText: "Add Review...",
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: primaryColor)),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 1, color: primaryColor),
                             ),
                           ),
                         ),
                       ),
                       Consumer<AddReviewNotifier>(builder: (context, data, _) {
-                        return data.isLoading ? const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: CircularProgressIndicator(color: primaryColor),
-                          ),
-                        ) : Center(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                backgroundColor: primaryColor),
-                            onPressed: () async {
-                              if (_reviewController.text.isNotEmpty &&
-                                  addReviewData.ratingValue != "") {
+                        return data.isLoading
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 20),
+                                  child: CircularProgressIndicator(
+                                      color: primaryColor),
+                                ),
+                              )
+                            : Center(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor: primaryColor),
+                                  onPressed: () async {
+                                    if (_reviewController.text.isNotEmpty &&
+                                        addReviewData.ratingValue != "") {
+                                      try {
+                                        await data.addReviewData(
+                                          rating: addReviewData.ratingValue,
+                                          comment: _reviewController.text,
+                                        );
+                                      } on Exception {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text("Submitted"),
+                                        ));
+                                        showSuccess(context);
+                                        _reviewController.clear();
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                          content: Text("Submitted"),
+                                        ));
+                                        showSuccess(context);
+                                        _reviewController.clear();
+                                      }
 
-                                try {
-                                  await data.addReviewData(
-                                    rating: addReviewData.ratingValue,
-                                    comment: _reviewController.text,
-                                  );
-                                } on Exception {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text("Submitted"),
-                                  ));
-                                  showSuccess(context);
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text("Submitted"),
-                                  ));
-                                  showSuccess(context);
-                                }
-
-                                try {
-                                  if (data.addReviewModel.status == "200") {
-                                    showSuccess(context);
-                                    _reviewController.clear();
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        behavior: SnackBarBehavior.floating,
-                                        backgroundColor: Colors.red,
-                                        content: Text(
-                                            "Something went wrong. Please try again later."),
-                                      ),
-                                    );
-                                  }
-                                } catch (_) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          "Something went wrong. Please try again later."),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                        "Fill all fields to submit"),
+                                      try {
+                                        if (data.addReviewModel.status ==
+                                            "200") {
+                                          showSuccess(context);
+                                          _reviewController.clear();
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                  "Something went wrong. Please try again later."),
+                                            ),
+                                          );
+                                        }
+                                      } catch (_) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                                "Something went wrong. Please try again later."),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          backgroundColor: Colors.red,
+                                          content:
+                                              Text("Fill all fields to submit"),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "Submit",
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                );
-                              }
-                            },
-                            child: Text(
-                              "Submit",
-                              style: GoogleFonts.openSans(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        );
+                                ),
+                              );
                       }),
+                      FutureBuilder(
+                          future: addReviewData.allReviews(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              if (addReviewData
+                                  .allReviewsModel.data.isNotEmpty) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        "All Reviews",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      width: double.infinity,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          itemCount: addReviewData
+                                              .allReviewsModel.data.length,
+                                          itemBuilder: (context, index) {
+                                            return Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets.only(left: 10.0),
+                                                        child: Text(
+                                                          "Rating ",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.green,
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                      .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          10)),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                                blurRadius: 10,
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 5)),
+                                                          ],
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(Icons.star, size: 10, color: Colors.white),
+                                                            Text(
+                                                              " ${addReviewData.allReviewsModel.data[index].rating} ",
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                      fontSize: 13,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: Colors
+                                                                          .white),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 5.0),
+                                                  child: Text(
+                                                    addReviewData.allReviewsModel.data[index].comment,
+                                                    style: GoogleFonts.montserrat(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                                                  child: Text(
+                                                    addReviewData.allReviewsModel.data[index].name,
+                                                    style: GoogleFonts.montserrat(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.grey),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            } else if (snapshot.hasError) {
+                              return SizedBox();
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                  color: primaryColor),
+                            );
+                          }),
                       FutureBuilder(
                           future: relatedProductsData.getRelatedProducts(
                               categoryId: productCategoryData.categoryId),
@@ -843,7 +1009,12 @@ class OfferProductDetailsView extends StatelessWidget {
                                                   child: Icon(Icons.add,
                                                       color: Colors.black),
                                                 ),
-                                                togetherProductsData.togetherProductsModel.data.length - 1 == index
+                                                togetherProductsData
+                                                                .togetherProductsModel
+                                                                .data
+                                                                .length -
+                                                            1 ==
+                                                        index
                                                     ? Container(
                                                         child: MaterialButton(
                                                           height:
@@ -862,9 +1033,16 @@ class OfferProductDetailsView extends StatelessWidget {
                                                                             .w600),
                                                           ),
                                                           onPressed: () async {
-                                                            await cartData.addToCartWithTogether(
-                                                              productId: productData.viewProductModel.data[0].id,
-                                                              together: togetherProductsData.togetherProductsModel.together.toString(),
+                                                            await cartData
+                                                                .addToCartWithTogether(
+                                                              productId: productData
+                                                                  .viewProductModel
+                                                                  .data[0]
+                                                                  .id,
+                                                              together: togetherProductsData
+                                                                  .togetherProductsModel
+                                                                  .together
+                                                                  .toString(),
                                                             );
                                                             if (cartData
                                                                     .addToCartModel
@@ -1201,7 +1379,6 @@ class OfferProductDetailsView extends StatelessWidget {
                     MaterialButton(
                       elevation: 0,
                       color: primaryColor,
-
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
