@@ -50,8 +50,7 @@ class HomeTabView extends StatelessWidget {
     final productsData = Provider.of<AccessoriesNotifier>(context, listen: false);
     final todaysDealsData =
         Provider.of<TodaysDealsNotifier>(context, listen: false);
-    final productDetailsData =
-        Provider.of<ViewProductNotifier>(context, listen: false);
+    final productDetailsData = Provider.of<ViewProductNotifier>(context, listen: false);
     final hotProductsData =
         Provider.of<HotProductsNotifier>(context, listen: false);
     final newProductsData =

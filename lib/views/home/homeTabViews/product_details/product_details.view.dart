@@ -36,8 +36,7 @@ class OfferProductDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<int> _quantityNotifier = ValueNotifier(1);
-    final productData =
-        Provider.of<ViewProductNotifier>(context, listen: false);
+    final productData = Provider.of<ViewProductNotifier>(context, listen: false);
     productData.isDataLoaded =
         false; //set product data loaded to false to show/hide bottom appbar
     final cartData = Provider.of<CartNotifier>(context, listen: false);

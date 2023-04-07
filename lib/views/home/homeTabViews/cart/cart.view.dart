@@ -81,8 +81,8 @@ class CartView extends StatelessWidget {
                                     .pushNamed("/offerProductDetailsView");
                               },
                               child: CartItem(
-                                name: cartData
-                                    .viewCartModel.data[index].productName,
+                                id: cartData.viewCartModel.data[index].productId,
+                                name: cartData.viewCartModel.data[index].productName,
                                 quantity:
                                     cartData.viewCartModel.data[index].qty,
                                 price: cartData.viewCartModel.data[index].price,
@@ -98,19 +98,23 @@ class CartView extends StatelessWidget {
                                       cartData.viewCartModel.data[index].id;
                                   await cartData.removeProductFromCart(
                                       productId: itemId);
-                                  if (cartData.removeFromCartModel.status ==
-                                      "200") {
+                                  if (cartData.removeFromCartModel.status == "200") {
                                     Navigator.pop(context);
                                     await cartData.getCartCount();
                                   }
                                 },
+                                saveitforlater: () async {
+                                  var itemId = cartData.viewCartModel.data[index].id;
+                                  await cartData.saveItForLater(productId: itemId);
+                                  if (cartData.saveItForLaterModel.status == "200") {
+                                    await cartData.getCartCount();
+                                    await cartData.saveItForLaterItems();
+                                  }
+                                },
                                 increaseQty: () async {
-                                  int qty = int.parse(cartData
-                                          .viewCartModel.data[index].qty) +
-                                      1;
+                                  int qty = int.parse(cartData.viewCartModel.data[index].qty) + 1;
                                   await cartData.updateCart(
-                                      cartId:
-                                          cartData.viewCartModel.data[index].id,
+                                      cartId: cartData.viewCartModel.data[index].id,
                                       qty: qty.toString(),
                                       price: cartData
                                           .viewCartModel.data[index].price,
@@ -325,7 +329,21 @@ class CartView extends StatelessWidget {
                               );
                             }
                             return SizedBox();
-                          })
+                          }),
+                      SizedBox(height: 10),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Saved Items",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
+                      ),
+                      SaveItForLaterItem(),
+                      SizedBox(height: 10),
                     ],
                   ),
                   bottomNavigationBar: Card(
@@ -427,6 +445,7 @@ class CartView extends StatelessWidget {
 class CartItem extends StatelessWidget {
   const CartItem({
     Key? key,
+    required this.id,
     required this.name,
     required this.quantity,
     required this.price,
@@ -437,8 +456,10 @@ class CartItem extends StatelessWidget {
     required this.image,
     required this.increaseQty,
     required this.decreaseQty,
+    required this.saveitforlater,
   }) : super(key: key);
 
+  final String id;
   final String name;
   final String quantity;
   final String price;
@@ -446,12 +467,17 @@ class CartItem extends StatelessWidget {
   final String cutPrice;
   final String offerPercentage;
   final String image;
+  final Function() saveitforlater;
   final Function() onRemoveItem;
   final Function() increaseQty;
   final Function() decreaseQty;
 
   @override
   Widget build(BuildContext context) {
+
+    final cartData = Provider.of<CartNotifier>(context, listen: false);
+    final orderNowData = Provider.of<OrderNotifier>(context, listen: false);
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -665,7 +691,7 @@ class CartItem extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: saveitforlater,
                 ),
               ),
               Container(
@@ -691,7 +717,33 @@ class CartItem extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: ((context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            title: Text('Remove item',
+                                style: TextStyle(color: Colors.black)),
+                            content: Text(
+                                'Do you want to remove this item from cart?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                child: Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: onRemoveItem,
+                                child: Text('Yes'),
+                              ),
+                            ],
+                          );
+                        }));
+                  },
                 ),
               ),
               Container(
@@ -717,7 +769,35 @@ class CartItem extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+
+                    // productDetailsData.productId = id;
+                    // Navigator.of(context).pushNamed("/offerProductDetailsView");
+
+                    await cartData.addToCart(
+                      productId: id,
+                      qty: quantity.toString(),
+                      price: price,
+                      cutPrice: cutPrice,
+                      offerPercentage: offerPercentage,
+                    );
+                    if (cartData.addToCartModel.status == "200") {
+                      await cartData.getCartCount();
+                      orderNowData.isBuyingSingleItem = true;
+                      Navigator.of(context).pushNamed("/singleItemPurchaseDetailsView");
+                    } else if (cartData.addToCartModel.status == "400") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text(cartData.addToCartModel.response),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text("Something went wrong")));
+                    }
+                  },
                 ),
               ),
             ],
@@ -729,6 +809,192 @@ class CartItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+//show SaveItForLater items list
+class SaveItForLaterItem extends StatelessWidget {
+  const SaveItForLaterItem({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    final cartData = Provider.of<CartNotifier>(context, listen: false);
+
+    return SizedBox(
+      width: double.infinity,
+      child: FutureBuilder(
+          future: cartData.saveItForLaterItems(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (cartData.saveItForLaterItemsModel.data.isNotEmpty) {
+                return ListView.builder(
+                    itemCount: cartData.saveItForLaterItemsModel.data.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        margin: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        cartData.saveItForLaterItemsModel.data[index].image,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Image.network(
+                                            noImage,
+                                            height: 100,
+                                            width: 100,
+                                          );
+                                        },
+                                        width: 90,
+                                        height: 90,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      // mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                          width: 160,
+                                          child: Text(
+                                            cartData.saveItForLaterItemsModel.data[index].productName,
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 14, fontWeight: FontWeight.w500),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              // offerPrice == ""
+                                              //     ? "Price: ₹$price"
+                                              //     : "Price: ₹$offerPrice",
+                                              "₹${cartData.saveItForLaterItemsModel.data[index].price}",
+                                              style: GoogleFonts.openSans(
+                                                  fontSize: 14, fontWeight: FontWeight.w600),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10, bottom: 2, top: 2),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.green,
+                                                  borderRadius: BorderRadius.circular(50)),
+                                              child: Text(
+                                                cartData.saveItForLaterItemsModel.data[index].offerPer == ""
+                                                    ? ""
+                                                    : "${cartData.saveItForLaterItemsModel.data[index].offerPer}%",
+                                                style: GoogleFonts.openSans(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Text("Quantity: $quantity",
+                                        //     style: GoogleFonts.openSans(
+                                        //         fontSize: 14, fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("₹${cartData.saveItForLaterItemsModel.data[index].totalPrice}",
+                                        style: GoogleFonts.openSans(
+                                            fontSize: 16, fontWeight: FontWeight.w600)),
+                                    cartData.saveItForLaterItemsModel.data[index].offerPer == ""
+                                        ? SizedBox(height: 10)
+                                        : Text("₹${cartData.saveItForLaterItemsModel.data[index].cutPrice}",
+                                        style: GoogleFonts.openSans(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            decoration: TextDecoration.lineThrough)),
+                                    SizedBox(height: 15),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     showDialog(
+                                    //         context: context,
+                                    //         builder: ((context) {
+                                    //           return AlertDialog(
+                                    //             shape: RoundedRectangleBorder(
+                                    //               borderRadius: BorderRadius.circular(20),
+                                    //             ),
+                                    //             title: Text('Remove item',
+                                    //                 style: TextStyle(color: Colors.black)),
+                                    //             content: Text(
+                                    //                 'Do you want to remove this item from cart?'),
+                                    //             actions: <Widget>[
+                                    //               TextButton(
+                                    //                 onPressed: () {
+                                    //                   Navigator.of(context).pop(false);
+                                    //                 },
+                                    //                 child: Text('No'),
+                                    //               ),
+                                    //               TextButton(
+                                    //                 onPressed: onRemoveItem,
+                                    //                 child: Text('Yes'),
+                                    //               ),
+                                    //             ],
+                                    //           );
+                                    //         }));
+                                    //   },
+                                    //   child: Row(
+                                    //     children: [
+                                    //       Icon(
+                                    //         Icons.delete,
+                                    //         color: Colors.grey,
+                                    //         size: 20,
+                                    //       ),
+                                    //       Text("Remove"),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              }  else {
+                //no items i cart
+                return Center(child: Text("Empty Saved Items"));
+              }
+            }
+            return Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            );
+          }),
     );
   }
 }

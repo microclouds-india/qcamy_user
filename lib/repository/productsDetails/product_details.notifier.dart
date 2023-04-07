@@ -4,8 +4,7 @@ import 'package:qcamyapp/models/viewProduct.model.dart';
 import 'package:qcamyapp/repository/productsDetails/product_details.networking.dart';
 
 class ViewProductNotifier extends ChangeNotifier {
-  final ProductDetailsNetworking _productDetailsNetworking =
-      ProductDetailsNetworking();
+  final ProductDetailsNetworking _productDetailsNetworking = ProductDetailsNetworking();
 
   late ViewProductModel viewProductModel;
   LocalStorage localStorage = LocalStorage();
@@ -18,8 +17,7 @@ class ViewProductNotifier extends ChangeNotifier {
   Future getProductDetails() async {
     try {
       final String? token = await localStorage.getToken();
-      viewProductModel = await _productDetailsNetworking.getProductDetails(
-          productId: productId, token: token!);
+      viewProductModel = await _productDetailsNetworking.getProductDetails(productId: productId, token: token!);
       isDataLoaded = true;
       notifyListeners();
       productId = "0";

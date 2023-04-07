@@ -5,6 +5,8 @@ import 'package:qcamyapp/models/cart/cartCount.model.dart';
 import 'package:qcamyapp/models/cart/removeFromCart.model.dart';
 import 'package:qcamyapp/models/cart/updateCart.model.dart';
 import 'package:qcamyapp/models/cart/viewCart.model.dart';
+import 'package:qcamyapp/models/saveItForLaterItems.model.dart';
+import 'package:qcamyapp/models/saveitforlater.model.dart';
 import 'package:qcamyapp/repository/cart/cart.networking.dart';
 
 class CartNotifier extends ChangeNotifier {
@@ -37,6 +39,8 @@ class CartNotifier extends ChangeNotifier {
   // }
 
   late CartCountModel cartCountModel;
+  late SaveItForLaterModel saveItForLaterModel;
+  late SaveItForLaterItemsModel saveItForLaterItemsModel;
 
   Future getCartCount() async {
     final String? token = await localStorage.getToken();
@@ -144,4 +148,31 @@ class CartNotifier extends ChangeNotifier {
     }
     return updateCartModel;
   }
+
+  Future saveItForLater({required String productId}) async {
+    final String? token = await localStorage.getToken();
+    try {
+      saveItForLaterModel = await _cartNetworking.saveItForLater(token: token!, id: productId);
+      // notifyListeners();
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    notifyListeners();
+    print(saveItForLaterModel.status);
+    return saveItForLaterModel;
+  }
+
+
+  Future saveItForLaterItems() async {
+    final String? token = await localStorage.getToken();
+    try {
+      saveItForLaterItemsModel = await _cartNetworking.saveItForLaterItems(token: token!);
+      // notifyListeners();
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    notifyListeners();
+    return saveItForLaterItemsModel;
+  }
+
 }

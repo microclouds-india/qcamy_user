@@ -5,6 +5,8 @@ import 'package:qcamyapp/models/cart/addToCart.model.dart';
 import 'package:qcamyapp/models/cart/cartCount.model.dart';
 import 'package:qcamyapp/models/cart/removeFromCart.model.dart';
 import 'package:qcamyapp/models/cart/viewCart.model.dart';
+import 'package:qcamyapp/models/saveItForLaterItems.model.dart';
+import 'package:qcamyapp/models/saveitforlater.model.dart';
 
 import '../../models/cart/updateCart.model.dart';
 
@@ -38,6 +40,8 @@ class CartNetworking {
   }
 
   late CartCountModel cartCountModel;
+  late SaveItForLaterModel saveItForLaterModel;
+  late SaveItForLaterItemsModel saveItForLaterItemsModel;
 
   //get number of items in cart
   Future<CartCountModel> getCartCount({
@@ -162,5 +166,45 @@ class CartNetworking {
       return Future.error(e);
     }
     return updateCartModel;
+  }
+
+  Future<SaveItForLaterModel> saveItForLater({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      final request =
+      await client.post(Uri.parse(urlENDPOINT + "saveit_later"), body: {
+        "token": token,
+        "id": id,
+      }).timeout(const Duration(seconds: 10));
+
+      if (request.statusCode == 200) {
+        final response = json.decode(request.body);
+        saveItForLaterModel = SaveItForLaterModel.fromJson(response);
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    return saveItForLaterModel;
+  }
+
+  Future<SaveItForLaterItemsModel> saveItForLaterItems({
+    required String token,
+  }) async {
+    try {
+      final request =
+      await client.post(Uri.parse(urlENDPOINT + "saveit_later_items"), body: {
+        "token": token,
+      }).timeout(const Duration(seconds: 10));
+
+      if (request.statusCode == 200) {
+        final response = json.decode(request.body);
+        saveItForLaterItemsModel = SaveItForLaterItemsModel.fromJson(response);
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    return saveItForLaterItemsModel;
   }
 }

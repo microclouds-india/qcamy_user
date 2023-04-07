@@ -36,7 +36,18 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _equipmentNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  late String warranty = "yes";
+  late String warranty = "Warranty";
+  List<String> warranty_items = ['1 year',
+    '2 year',
+    '3 year',
+    '4 year',
+    '5 year',
+    '6 year',
+    '7 year',
+    '8 year',
+    '9 year',
+    '10 year',
+  ];
   @override
   Widget build(BuildContext context) {
     //func to select image from gallery
@@ -172,35 +183,72 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
               maxLines: 5,
               controller: _descriptionController,
             ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: Row(
-                  children: [
-                    Text('Warranty?'),
-                    Spacer(),
-                    ToggleSwitch(
-                      initialLabelIndex: 0,
-                      totalSwitches: 2,
-                      activeBgColor: [primaryColor],
-                      inactiveFgColor: Colors.white,
-                      labels: [
-                        'Yes',
-                        'No',
-                      ],
-                      onToggle: (index) {
-                        if(index == 0){
-                          warranty = "yes";
-                        }else{
-                          warranty = "no";
-                        }
-                        print('switched to: $warranty');
-                      },
-                    ),
-                  ],
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.shade800, width: 1),
+              ),
+              child: DropdownButton(
+                isExpanded: true,
+                underline: const SizedBox(),
+                hint: Text(warranty),
+                items: warranty_items.map((map) => DropdownMenuItem(
+                  value: map,
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
+                          top: 15.0,
+                          bottom: 15.0),
+                      decoration:
+                      Ui.getBoxDecorationProduct(
+                          color: primaryColor),
+                      child: Text(map, style: const TextStyle(color: Colors.black),)),
                 ),
+                ).toList(),
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    warranty = value.toString();
+                  });
+                },
               ),
             ),
+            // Center(
+            //   child: Container(
+            //     margin: EdgeInsets.only(left: 10.0, right: 10.0),
+            //     child: Row(
+            //       children: [
+            //         Text('Warranty?'),
+            //         Spacer(),
+            //         ToggleSwitch(
+            //           initialLabelIndex: 0,
+            //           totalSwitches: 2,
+            //           activeBgColor: [primaryColor],
+            //           inactiveFgColor: Colors.white,
+            //           labels: [
+            //             'Yes',
+            //             'No',
+            //           ],
+            //           onToggle: (index) {
+            //             if(index == 0){
+            //               warranty = "yes";
+            //             }else{
+            //               warranty = "no";
+            //             }
+            //             print('switched to: $warranty');
+            //           },
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             //button to select images
             Container(
               alignment: Alignment.topLeft,
@@ -280,7 +328,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                               _mobileNumberController.text.isNotEmpty &&
                               _equipmentNameController.text.isNotEmpty &&
                               _addressController.text.isNotEmpty &&
-                              warranty.isNotEmpty &&
+                              warranty != "Warranty" &&
                               imageFileList!.isNotEmpty) {
                             LocalStorage localStorage = LocalStorage();
                             final String? token = await localStorage.getToken();
@@ -301,7 +349,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                               //     .showSnackBar(SnackBar(
                               //   content: Text("Submitted"),
                               // ));
-                              showSuccess(context);
+                              // showSuccess(context);
                             } catch (e) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
