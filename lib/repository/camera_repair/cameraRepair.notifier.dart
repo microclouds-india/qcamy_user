@@ -45,19 +45,20 @@ class CameraRepairNotifier extends ChangeNotifier {
       return cameraRepairModel;
     } on Exception catch (e) {
       //catch late initialization error
-      // cameraRepairModel = await _cameraRepairNetworking.cameraRepair(
-      //   token: token,
-      //   name: name,
-      //   mobileNumber: mobileNumber,
-      //   address: address,
-      //   equipmentName: equipmentName,
-      //   description: description,
-      //   imageList: imageList,
-      // );
+      cameraRepairModel = await _cameraRepairNetworking.cameraRepair(
+        token: token,
+        name: name,
+        mobileNumber: mobileNumber,
+        address: address,
+        equipmentName: equipmentName,
+        description: description,
+        warranty: warranty,
+        imageList: imageList,
+      );
 
       loading(false);
-      return Future.error(e);
-      // return cameraRepairModel;
+      return cameraRepairModel;
+      // return Future.error(e);
     } catch (e) {
       loading(false);
       return Future.error(e.toString());

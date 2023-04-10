@@ -426,7 +426,28 @@ class CartView extends StatelessWidget {
                         },
                       ),
                     ),
-                    body: Center(child: Text("Empty Cart")));
+                    body: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Center(
+                          child: Text("Empty Cart"),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Saved Items",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                        ),
+                        SaveItForLaterItem(),
+                        SizedBox(height: 10),
+                      ],
+                    ));
               }
             }
             return Center(
@@ -671,6 +692,7 @@ class CartItem extends StatelessWidget {
             color: Colors.grey,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
               Center(
@@ -699,58 +721,58 @@ class CartItem extends StatelessWidget {
                 height: 50,
                 color: Colors.grey,
               ),
-              Center(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    elevation: 0,
-                  ),
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                    size: 20.0,
-                  ),
-                  label: Text(
-                    'Remove',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: ((context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            title: Text('Remove item',
-                                style: TextStyle(color: Colors.black)),
-                            content: Text(
-                                'Do you want to remove this item from cart?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                                child: Text('No'),
-                              ),
-                              TextButton(
-                                onPressed: onRemoveItem,
-                                child: Text('Yes'),
-                              ),
-                            ],
-                          );
-                        }));
-                  },
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 50,
-                color: Colors.grey,
-              ),
+              // Center(
+              //   child: ElevatedButton.icon(
+              //     style: ElevatedButton.styleFrom(
+              //       primary: Colors.white,
+              //       elevation: 0,
+              //     ),
+              //     icon: Icon(
+              //       Icons.delete,
+              //       color: Colors.black,
+              //       size: 20.0,
+              //     ),
+              //     label: Text(
+              //       'Remove',
+              //       style: TextStyle(
+              //         color: Colors.black,
+              //         fontSize: 12,
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       showDialog(
+              //           context: context,
+              //           builder: ((context) {
+              //             return AlertDialog(
+              //               shape: RoundedRectangleBorder(
+              //                 borderRadius: BorderRadius.circular(20),
+              //               ),
+              //               title: Text('Remove item',
+              //                   style: TextStyle(color: Colors.black)),
+              //               content: Text(
+              //                   'Do you want to remove this item from cart?'),
+              //               actions: <Widget>[
+              //                 TextButton(
+              //                   onPressed: () {
+              //                     Navigator.of(context).pop(false);
+              //                   },
+              //                   child: Text('No'),
+              //                 ),
+              //                 TextButton(
+              //                   onPressed: onRemoveItem,
+              //                   child: Text('Yes'),
+              //                 ),
+              //               ],
+              //             );
+              //           }));
+              //     },
+              //   ),
+              // ),
+              // Container(
+              //   width: 1,
+              //   height: 50,
+              //   color: Colors.grey,
+              // ),
               Center(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(

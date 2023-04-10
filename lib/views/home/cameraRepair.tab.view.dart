@@ -333,7 +333,7 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                             LocalStorage localStorage = LocalStorage();
                             final String? token = await localStorage.getToken();
 
-                            try {
+                            // try {
                               await data.submitCameraRepair(
                                 token: token!,
                                 name: _nameController.text,
@@ -344,40 +344,18 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                                 warranty: warranty,
                                 imageList: imageFileList!,
                               );
-                            } on Exception {
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(SnackBar(
-                              //   content: Text("Submitted"),
-                              // ));
-                              // showSuccess(context);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text("Submitted"),
-                              ));
-                              showSuccess(context);
-                            }
-
-                            try {
+                            // } on Exception {
+                            //   // ScaffoldMessenger.of(context)
+                            //   //     .showSnackBar(SnackBar(
+                            //   //   content: Text("Submitted"),
+                            //   // ));
+                            //   // showSuccess(context);
+                            // } catch (e) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Submitted"),),);
+                            //   showSuccess(context);
+                            // }
+                            // try {
                               if (data.cameraRepairModel.status == "200") {
-                                // showDialog(
-                                //     context: context,
-                                //     builder: ((context) {
-                                //       return SuccessDialog(
-                                //         message:
-                                //             "Your complaint has been registered successfully.\nOur expert will contact you soon",
-                                //         onOkPressed: () {
-                                //           Navigator.pop(context);
-                                //           FocusScope.of(context).unfocus();
-                                //           setState(() {
-                                //             imageFileList!.clear();
-                                //           });
-
-                                //           HomeView.pageIndexNotifier.value = 0;
-                                //         },
-                                //       );
-                                //     }));
-
                                 showSuccess(context);
                                 _nameController.clear();
                                 _mobileNumberController.clear();
@@ -394,16 +372,16 @@ class _CameraRepairTabViewState extends State<CameraRepairTabView> {
                                   ),
                                 );
                               }
-                            } catch (_) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.red,
-                                  content: Text(
-                                      "Something went wrong. Please try again later."),
-                                ),
-                              );
-                            }
+                            // } catch (_) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     SnackBar(
+                            //       behavior: SnackBarBehavior.floating,
+                            //       backgroundColor: Colors.red,
+                            //       content: Text(
+                            //           "Something went wrong. Please try again later."),
+                            //     ),
+                            //   );
+                            // }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
