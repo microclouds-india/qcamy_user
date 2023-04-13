@@ -46,7 +46,6 @@ class RentalShopsList extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
@@ -67,12 +66,8 @@ class RentalShopsList extends StatelessWidget {
                       return Image.network(
                           "https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg");
                     },
-                  )),
-              // child: Image.network(
-              //   image ??
-              //       "https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg",
-              //   height: 80,
-              // ),
+                  ),
+              ),
             ),
             const SizedBox(width: 18),
             Expanded(
