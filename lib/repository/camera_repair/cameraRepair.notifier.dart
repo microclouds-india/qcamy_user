@@ -26,6 +26,7 @@ class CameraRepairNotifier extends ChangeNotifier {
     required String warranty,
     required List<XFile> imageList,
   }) async {
+
     loading(true);
 
     try {
