@@ -8,17 +8,21 @@ class SpecificationsNotifier extends ChangeNotifier {
   late SpecificationsModel specificationsModel;
 
   String productId = "1";
+  bool isLoading = false;
 
-  bool isDataLoaded = false;
+  loading(bool isLoading) {
+    this.isLoading = isLoading;
+    notifyListeners();
+  }
 
   Future getSpecifications(String productId) async {
     try {
+      loading(true);
       specificationsModel = await _specificationsNetworking.getSpecifications(productId: productId);
-      isDataLoaded = true;
-      notifyListeners();
-
+      loading(false);
       return specificationsModel;
     } catch (e) {
+      loading(false);
       return Future.error(e);
     }
   }

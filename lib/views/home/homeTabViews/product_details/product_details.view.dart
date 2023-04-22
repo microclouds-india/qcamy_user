@@ -36,7 +36,8 @@ class OfferProductDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<int> _quantityNotifier = ValueNotifier(1);
-    final productData = Provider.of<ViewProductNotifier>(context, listen: false);
+    final productData =
+        Provider.of<ViewProductNotifier>(context, listen: false);
     productData.isDataLoaded =
         false; //set product data loaded to false to show/hide bottom appbar
     final cartData = Provider.of<CartNotifier>(context, listen: false);
@@ -52,7 +53,8 @@ class OfferProductDetailsView extends StatelessWidget {
         Provider.of<RemoveWishListNotifier>(context, listen: false);
     final specificationsData =
         Provider.of<SpecificationsNotifier>(context, listen: false);
-    final addReviewData = Provider.of<AddReviewNotifier>(context, listen: false);
+    final addReviewData =
+        Provider.of<AddReviewNotifier>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -518,65 +520,66 @@ class OfferProductDetailsView extends StatelessWidget {
                             .getSpecifications(productData.productId),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return specificationsData
-                                    .specificationsModel.data.isNotEmpty
-                                ? Card(
-                                    margin: EdgeInsets.all(10),
-                                    elevation: 0,
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "specifications",
-                                            style: GoogleFonts.montserrat(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14),
-                                          ),
-                                          SizedBox(height: 5),
-                                          ListView.builder(
-                                            itemCount: specificationsData
-                                                .specificationsModel
-                                                .data
-                                                .length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              return Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                        specificationsData
-                                                            .specificationsModel
-                                                            .data[index]
-                                                            .specCat),
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(specificationsData
-                                                            .specificationsModel
-                                                            .data[index]
-                                                            .catValue +
-                                                        " " +
-                                                        specificationsData
-                                                            .specificationsModel
-                                                            .data[index]
-                                                            .measure),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ],
+                            if (specificationsData
+                                .specificationsModel.data.isNotEmpty) {
+                              return Card(
+                                margin: EdgeInsets.all(10),
+                                elevation: 0,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "specifications",
+                                        style: GoogleFonts.montserrat(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14),
                                       ),
-                                    ),
-                                  )
-                                : const Center(child: Text("No items"));
+                                      SizedBox(height: 5),
+                                      ListView.builder(
+                                        itemCount: specificationsData
+                                            .specificationsModel.data.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(specificationsData
+                                                    .specificationsModel
+                                                    .data[index]
+                                                    .specCat),
+                                              ),
+                                              Expanded(
+                                                child: Text(specificationsData
+                                                        .specificationsModel
+                                                        .data[index]
+                                                        .catValue +
+                                                    " " +
+                                                    specificationsData
+                                                        .specificationsModel
+                                                        .data[index]
+                                                        .measure),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          } else if (snapshot.hasError) {
+                            return SizedBox();
                           } else {
                             return Center(
                               child: SizedBox(
@@ -750,16 +753,20 @@ class OfferProductDetailsView extends StatelessWidget {
                                               .allReviewsModel.data.length,
                                           itemBuilder: (context, index) {
                                             return Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Container(
                                                   margin: EdgeInsets.all(10.0),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
                                                     children: [
                                                       Container(
-                                                        margin: const EdgeInsets.only(left: 10.0),
+                                                        margin: const EdgeInsets
+                                                            .only(left: 10.0),
                                                         child: Text(
                                                           "Rating ",
                                                           style: GoogleFonts
@@ -799,17 +806,19 @@ class OfferProductDetailsView extends StatelessWidget {
                                                         ),
                                                         child: Row(
                                                           children: [
-                                                            Icon(Icons.star, size: 10, color: Colors.white),
+                                                            Icon(Icons.star,
+                                                                size: 10,
+                                                                color: Colors
+                                                                    .white),
                                                             Text(
                                                               " ${addReviewData.allReviewsModel.data[index].rating} ",
-                                                              style: GoogleFonts
-                                                                  .montserrat(
-                                                                      fontSize: 13,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      color: Colors
-                                                                          .white),
+                                                              style: GoogleFonts.montserrat(
+                                                                  fontSize: 13,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white),
                                                             ),
                                                           ],
                                                         ),
@@ -818,25 +827,38 @@ class OfferProductDetailsView extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 5.0),
+                                                  margin: EdgeInsets.only(
+                                                      left: 20.0,
+                                                      right: 20.0,
+                                                      bottom: 5.0),
                                                   child: Text(
-                                                    addReviewData.allReviewsModel.data[index].comment,
-                                                    style: GoogleFonts.montserrat(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        color: Colors.black),
+                                                    addReviewData
+                                                        .allReviewsModel
+                                                        .data[index]
+                                                        .comment,
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                Colors.black),
                                                   ),
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                                                  margin: EdgeInsets.only(
+                                                      left: 20.0, right: 20.0),
                                                   child: Text(
-                                                    addReviewData.allReviewsModel.data[index].name,
-                                                    style: GoogleFonts.montserrat(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.grey),
+                                                    addReviewData
+                                                        .allReviewsModel
+                                                        .data[index]
+                                                        .name,
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.grey),
                                                   ),
                                                 ),
                                               ],

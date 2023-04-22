@@ -18,7 +18,9 @@ class SpecificationsNetworking {
 
       if (request.statusCode == 200) {
         final response = json.decode(request.body);
+        print("aaaaa"+specificationsModel.status);
         specificationsModel = SpecificationsModel.fromJson(response);
+        print("bbbbb"+specificationsModel.status);
       }
     } catch (e) {
       throw Exception(e);

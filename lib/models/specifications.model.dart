@@ -11,7 +11,7 @@ class SpecificationsModel {
 
   factory SpecificationsModel.fromJson(Map<String, dynamic> json) => SpecificationsModel(
     message: json["message"] ?? "",
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)) ?? []),
     status: json["status"] ?? "",
   );
 
