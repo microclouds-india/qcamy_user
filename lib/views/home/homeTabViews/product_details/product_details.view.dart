@@ -602,24 +602,28 @@ class OfferProductDetailsView extends StatelessWidget {
                               color: Colors.black),
                         ),
                       ),
-                      RatingBar.builder(
-                        initialRating: 5,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                      Center(
+                        child: RatingBar.builder(
+                          initialRating: 5,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemSize: 35,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {
+                            addReviewData.ratingValue = rating.toString();
+                            print(rating);
+                          },
                         ),
-                        onRatingUpdate: (rating) {
-                          addReviewData.ratingValue = rating.toString();
-                          print(rating);
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.only(
+                            top: 10.0, bottom: 10.0, left: 35.0, right: 35.0),
                         child: TextField(
                           controller: _reviewController,
                           decoration: const InputDecoration(
@@ -771,7 +775,7 @@ class OfferProductDetailsView extends StatelessWidget {
                                                           "Rating ",
                                                           style: GoogleFonts
                                                               .montserrat(
-                                                                  fontSize: 15,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
@@ -785,25 +789,26 @@ class OfferProductDetailsView extends StatelessWidget {
                                                           color: Colors.green,
                                                           borderRadius:
                                                               const BorderRadius
-                                                                      .all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10)),
+                                                                  .all(
+                                                            Radius.circular(10),
+                                                          ),
                                                           boxShadow: [
                                                             BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.3),
-                                                                blurRadius: 10,
-                                                                offset:
-                                                                    const Offset(
-                                                                        0, 5)),
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                              blurRadius: 10,
+                                                              offset:
+                                                                  const Offset(
+                                                                      0, 5),
+                                                            ),
                                                           ],
                                                           border: Border.all(
                                                               color:
                                                                   Colors.grey),
                                                         ),
+                                                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
                                                         child: Row(
                                                           children: [
                                                             Icon(Icons.star,
@@ -838,7 +843,7 @@ class OfferProductDetailsView extends StatelessWidget {
                                                         .comment,
                                                     style:
                                                         GoogleFonts.montserrat(
-                                                            fontSize: 15,
+                                                            fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             color:

@@ -1008,7 +1008,9 @@ class SaveItForLaterItem extends StatelessWidget {
                         ),
                       );
                     });
-              }  else {
+              }  else if (snapshot.hasError) {
+                return Center(child: Text("Empty Saved Items"));
+              } else {
                 //no items i cart
                 return Center(child: Text("Empty Saved Items"));
               }

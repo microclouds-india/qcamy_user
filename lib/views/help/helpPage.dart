@@ -241,7 +241,7 @@ class HelpPage extends StatelessWidget {
                   getHelpItems(
                       textHeading: "Whatsapp",
                       textTitle: "+919999999999",
-                      icon: Icons.whatsapp,
+                      icon: Icons.message,
                       onTap: () {
                         openWhatsapp(context: context);
                       }),

@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -48,12 +48,12 @@ class RentalShopsTabView extends StatelessWidget {
                             },
                             icon: Consumer<CartNotifier>(
                                 builder: (context, data, _) {
-                              return Badge(
+                              return badges.Badge(
                                 badgeContent: Text(
                                   cartData.cartCountModel.count.toString(),
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                badgeColor: primaryColor,
+                                badgeStyle: badges.BadgeStyle(badgeColor: primaryColor,),
                                 child: Icon(
                                   Icons.shopping_cart,
                                   color: Colors.grey.shade700,
@@ -66,12 +66,12 @@ class RentalShopsTabView extends StatelessWidget {
                             onPressed: () async {
                               Navigator.of(context).pushNamed("/cartView");
                             },
-                            icon: Badge(
+                            icon: badges.Badge(
                               badgeContent: Text(
                                 '0',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              badgeColor: primaryColor,
+                              badgeStyle: badges.BadgeStyle(badgeColor: primaryColor,),
                               child: Icon(
                                 Icons.shopping_cart,
                                 color: Colors.grey.shade700,

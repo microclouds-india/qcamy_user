@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:badges/badges.dart' as badges;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -204,14 +205,14 @@ class HomeTabView extends StatelessWidget {
                                           },
                                           icon: Consumer<CartNotifier>(
                                               builder: (context, data, _) {
-                                            return Badge(
+                                            return badges.Badge(
                                               badgeContent: Text(
                                                 cartData.cartCountModel.count
                                                     .toString(),
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
-                                              badgeColor: primaryColor,
+                                              badgeStyle: badges.BadgeStyle(badgeColor: primaryColor,),
                                               child: Icon(
                                                 Icons.shopping_cart,
                                                 color: Colors.grey.shade700,
@@ -225,13 +226,13 @@ class HomeTabView extends StatelessWidget {
                                             Navigator.of(context)
                                                 .pushNamed("/cartView");
                                           },
-                                          icon: Badge(
+                                          icon: badges.Badge(
                                             badgeContent: Text(
                                               '0',
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
-                                            badgeColor: primaryColor,
+                                            badgeStyle: badges.BadgeStyle(badgeColor: primaryColor,),
                                             child: Icon(
                                               Icons.shopping_cart,
                                               color: Colors.grey.shade700,
