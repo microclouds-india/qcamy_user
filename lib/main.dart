@@ -4,10 +4,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/config/providers.dart';
 import 'package:qcamyapp/config/routes.dart';
 
 import 'package:qcamyapp/views/splashscreen/splash.view.dart';
+
+import 'views/order invoice/orderInvoice.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -33,6 +36,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
+        theme: ThemeData(
+          colorScheme: ColorScheme.light(primary: primaryColor)
+        ),
           debugShowCheckedModeBanner: false,
           home: MyHomePage(),
           // initialRoute: '/mainHomeView',
@@ -51,6 +57,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const SplashView();
+    return SplashView();
   }
 }

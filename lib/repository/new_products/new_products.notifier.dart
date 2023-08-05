@@ -16,6 +16,7 @@ class NewProductsNotifier extends ChangeNotifier {
       newArrivalsModel = await _newProductsNetworking.getNewProducts(token: token!);
     } catch (e) {
       // throw Exception(e);
+      Future.error(e);
 
     }
     return newArrivalsModel;

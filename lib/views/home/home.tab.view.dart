@@ -657,8 +657,14 @@ class HomeTabView extends StatelessWidget {
               child: FutureBuilder(
                   future: newProductsData.getHotProducts(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
+                   if (snapshot.connectionState == ConnectionState.waiting) {
+                     return Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
+                     );
+                   }else if(snapshot.hasData){
+                   return ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemCount:
@@ -688,12 +694,15 @@ class HomeTabView extends StatelessWidget {
                               ),
                             );
                           });
-                    }
+                   }else if(snapshot.hasError) {
+                    return SizedBox();
+                   }else{
                     return Center(
                       child: CircularProgressIndicator(
                         color: primaryColor,
                       ),
-                    );
+                     );
+                   }
                   }),
             ),
             Container(

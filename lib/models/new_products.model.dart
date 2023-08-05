@@ -39,7 +39,6 @@ class Datum {
   String cutPrice;
   String mrp;
   dynamic offerPer;
-
   String image;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(

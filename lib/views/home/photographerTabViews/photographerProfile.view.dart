@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:qcamyapp/config/colors.dart';
 import 'package:qcamyapp/widgets/view_image.widget.dart';
-import 'package:simple_url_preview/simple_url_preview.dart';
+import 'package:simple_url_preview_v2/simple_url_preview.dart';
+// import 'package:simple_url_preview/simple_url_preview.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../../repository/book_photographer/book_photographer.notifier.dart';
@@ -328,6 +329,9 @@ class _PhotographerProfileViewState extends State<PhotographerProfileView>
                                           ),
                                           bgColor: Colors.white,
                                         );
+
+//
+
                                         // Text(photographerData
                                         //     .photographerProfileModel
                                         //     .links[index]

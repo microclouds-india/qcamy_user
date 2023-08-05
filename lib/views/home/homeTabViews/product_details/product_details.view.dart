@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:qcamyapp/common/ui/Ui.dart';
 import 'package:qcamyapp/config/colors.dart';
@@ -26,11 +27,20 @@ import 'package:qcamyapp/widgets/view_image.widget.dart';
 import 'package:readmore/readmore.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/services.dart';
+import '../../../../repository/image picker/imagePicker.dart';
 import '../../../../repository/related_products/related_products.notifier.dart';
+import '../../../../repository/return policy/notifier.dart';
+import '../../../review image/reviewImages.dart';
 
-class OfferProductDetailsView extends StatelessWidget {
+class OfferProductDetailsView extends StatefulWidget {
   OfferProductDetailsView({Key? key}) : super(key: key);
 
+  @override
+  State<OfferProductDetailsView> createState() =>
+      _OfferProductDetailsViewState();
+}
+
+class _OfferProductDetailsViewState extends State<OfferProductDetailsView> {
   final TextEditingController _reviewController = TextEditingController();
 
   @override
@@ -55,6 +65,12 @@ class OfferProductDetailsView extends StatelessWidget {
         Provider.of<SpecificationsNotifier>(context, listen: false);
     final addReviewData =
         Provider.of<AddReviewNotifier>(context, listen: false);
+    final imageProvider =
+        Provider.of<ImageProviderModel>(context, listen: false);
+    final productDetailsData =
+        Provider.of<ViewProductNotifier>(context, listen: false);
+    final returnPolicy =
+        Provider.of<ReturnPolicyNotifier>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -495,6 +511,7 @@ class OfferProductDetailsView extends StatelessWidget {
                                 style: TextStyle(),
                               ),
                               Text(
+                                // ignore: unnecessary_string_interpolations
                                 "${productData.viewProductModel.data[0].traderName.toString()}",
                                 style: TextStyle(
                                   color: primaryColor,
@@ -591,298 +608,441 @@ class OfferProductDetailsView extends StatelessWidget {
                           }
                         },
                       ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Add Review",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black),
-                        ),
-                      ),
-                      Center(
-                        child: RatingBar.builder(
-                          initialRating: 5,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemSize: 35,
-                          itemCount: 5,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
+                      Visibility(
+                        visible: productData
+                            .viewProductModel.data[0].warranty.isNotEmpty,
+                        child: Card(
+                          margin: EdgeInsets.all(10),
+                          elevation: 0,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          onRatingUpdate: (rating) {
-                            addReviewData.ratingValue = rating.toString();
-                            print(rating);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 35.0, right: 35.0),
-                        child: TextField(
-                          controller: _reviewController,
-                          decoration: const InputDecoration(
-                            hintText: "Add Review...",
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: primaryColor)),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 1, color: primaryColor),
+                          child: ListTile(
+                            title: Text(
+                              'Warranty'.toString(),
+                              style: GoogleFonts.montserrat(fontSize: 16),
+                            ),
+                            subtitle: Text(
+                              productData.viewProductModel.data[0].warranty
+                                  .toString(),
+                              style: GoogleFonts.montserrat(fontSize: 15),
+                              // overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
                       ),
-                      Consumer<AddReviewNotifier>(builder: (context, data, _) {
-                        return data.isLoading
-                            ? const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 20),
-                                  child: CircularProgressIndicator(
-                                      color: primaryColor),
-                                ),
-                              )
-                            : Center(
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                      backgroundColor: primaryColor),
-                                  onPressed: () async {
-                                    if (_reviewController.text.isNotEmpty &&
-                                        addReviewData.ratingValue != "") {
-                                      try {
-                                        await data.addReviewData(
-                                          rating: addReviewData.ratingValue,
-                                          comment: _reviewController.text,
-                                        );
-                                      } on Exception {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          content: Text("Submitted"),
-                                        ));
-                                        showSuccess(context);
-                                        _reviewController.clear();
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          content: Text("Submitted"),
-                                        ));
-                                        showSuccess(context);
-                                        _reviewController.clear();
-                                      }
-
-                                      try {
-                                        if (data.addReviewModel.status ==
-                                            "200") {
-                                          showSuccess(context);
-                                          _reviewController.clear();
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              behavior:
-                                                  SnackBarBehavior.floating,
-                                              backgroundColor: Colors.red,
-                                              content: Text(
-                                                  "Something went wrong. Please try again later."),
-                                            ),
-                                          );
-                                        }
-                                      } catch (_) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            behavior: SnackBarBehavior.floating,
-                                            backgroundColor: Colors.red,
-                                            content: Text(
-                                                "Something went wrong. Please try again later."),
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: Colors.red,
-                                          content:
-                                              Text("Fill all fields to submit"),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Text(
-                                    "Submit",
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              );
-                      }),
                       FutureBuilder(
-                          future: addReviewData.allReviews(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (addReviewData
-                                  .allReviewsModel.data.isNotEmpty) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "All Reviews",
-                                        style: GoogleFonts.montserrat(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.black),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.3,
-                                      width: double.infinity,
-                                      child: ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          itemCount: addReviewData
-                                              .allReviewsModel.data.length,
-                                          itemBuilder: (context, index) {
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.all(10.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(left: 10.0),
-                                                        child: Text(
-                                                          "Rating ",
-                                                          style: GoogleFonts
-                                                              .montserrat(
+                        future: returnPolicy.getData('6'),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            return Card(
+                                margin: EdgeInsets.all(10),
+                                elevation: 0,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: EquipmentDetails(
+                                  title: 'Return Policy'.toString(),
+                                  details: snapshot.data!.returnPolicy,
+                                ));
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "All Reviews",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return AddReviewScreen();
+                                }));
+                              },
+                              child: Text(
+                                'Add Review',
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Consumer<AddReviewNotifier>(builder: (_, a, child) {
+                        return FutureBuilder(
+                            future: addReviewData.allReviews(
+                                productData.viewProductModel.data[0].id),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                if (addReviewData
+                                    .allReviewsModel.data.isNotEmpty) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        // height:
+                                        //     MediaQuery.of(context).size.height *
+                                        //         0.3,
+                                        // width: double.infinity,
+                                        child: ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            itemCount: addReviewData
+                                                        .allReviewsModel
+                                                        .data
+                                                        .length >
+                                                    5
+                                                ? 5
+                                                : addReviewData.allReviewsModel
+                                                    .data.length,
+                                            itemBuilder: (context, index) {
+                                              return Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ListTile(
+                                                    leading: CachedNetworkImage(
+                                                      imageUrl: addReviewData
+                                                          .allReviewsModel
+                                                          .data[index]
+                                                          .photo,
+                                                      imageBuilder: (context,
+                                                              imageProvider) =>
+                                                          CircleAvatar(
+                                                        backgroundImage:
+                                                            imageProvider,
+                                                      ),
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey,
+                                                        child: Center(
+                                                            child: Icon(
+                                                          Icons.person,
+                                                          color: Colors.white,
+                                                        )),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey,
+                                                        child: Center(
+                                                            child: Icon(
+                                                          Icons.person,
+                                                          color: Colors.white,
+                                                        )),
+                                                      ),
+                                                    ),
+                                                    subtitle: Container(
+                                                      // margin:
+                                                      //     EdgeInsets.all(10.0),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            // margin:
+                                                            //     const EdgeInsets
+                                                            //             .only(
+                                                            //         left: 10.0),
+                                                            child: Text(
+                                                              "Rating ",
+                                                              style: GoogleFonts.montserrat(
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
                                                                   color: Colors
                                                                       .black),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.green,
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .all(
-                                                            Radius.circular(10),
+                                                            ),
                                                           ),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: Colors.grey
-                                                                  .withOpacity(
-                                                                      0.3),
-                                                              blurRadius: 10,
-                                                              offset:
-                                                                  const Offset(
-                                                                      0, 5),
-                                                            ),
-                                                          ],
-                                                          border: Border.all(
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
                                                               color:
-                                                                  Colors.grey),
-                                                        ),
-                                                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                                        child: Row(
-                                                          children: [
-                                                            Icon(Icons.star,
-                                                                size: 10,
-                                                                color: Colors
-                                                                    .white),
-                                                            Text(
-                                                              " ${addReviewData.allReviewsModel.data[index].rating} ",
-                                                              style: GoogleFonts.montserrat(
-                                                                  fontSize: 13,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
+                                                                  Colors.green,
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    10),
+                                                              ),
+                                                              boxShadow: [
+                                                                BoxShadow(
                                                                   color: Colors
-                                                                      .white),
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          0.3),
+                                                                  blurRadius:
+                                                                      10,
+                                                                  offset:
+                                                                      const Offset(
+                                                                          0, 5),
+                                                                ),
+                                                              ],
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey),
                                                             ),
-                                                          ],
-                                                        ),
+                                                            // padding:
+                                                            //     EdgeInsets.only(
+                                                            //         left: 5.0,
+                                                            //         right: 5.0),
+                                                            // margin:
+                                                            //     EdgeInsets.only(
+                                                            //         left: 5.0,
+                                                            //         right: 5.0),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(Icons.star,
+                                                                    size: 10,
+                                                                    color: Colors
+                                                                        .white),
+                                                                Text(
+                                                                  " ${addReviewData.allReviewsModel.data[index].rating} ",
+                                                                  style: GoogleFonts.montserrat(
+                                                                      fontSize:
+                                                                          13,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
+                                                    title: Container(
+                                                      // margin: EdgeInsets.only(
+                                                      //     left: 20.0,
+                                                      //     right: 20.0),
+                                                      child: Text(
+                                                        addReviewData
+                                                            .allReviewsModel
+                                                            .data[index]
+                                                            .name,
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .grey),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 20.0,
-                                                      right: 20.0,
-                                                      bottom: 5.0),
-                                                  child: Text(
-                                                    addReviewData
-                                                        .allReviewsModel
-                                                        .data[index]
-                                                        .comment,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color:
-                                                                Colors.black),
+                                                  Container(
+                                                    width: 200,
+                                                    margin: EdgeInsets.only(
+                                                        left: 20.0,
+                                                        right: 20.0,
+                                                        bottom: 5.0),
+                                                    child: Text(
+                                                      addReviewData
+                                                          .allReviewsModel
+                                                          .data[index]
+                                                          .comment,
+                                                      maxLines: 10,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.black),
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 20.0, right: 20.0),
-                                                  child: Text(
-                                                    addReviewData
-                                                        .allReviewsModel
-                                                        .data[index]
-                                                        .name,
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.grey),
+                                                  Visibility(
+                                                      visible: addReviewData
+                                                          .allReviewsModel
+                                                          .data[index]
+                                                          .images
+                                                          .isNotEmpty,
+                                                      child: SizedBox(
+                                                          height: 150,
+                                                          child:
+                                                              ListView.builder(
+                                                            itemCount: addReviewData
+                                                                .allReviewsModel
+                                                                .data[index]
+                                                                .images
+                                                                .length,
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    imageIndex) {
+                                                              return Container(
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10.0,
+                                                                        right:
+                                                                            10.0),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl: addReviewData
+                                                                          .allReviewsModel
+                                                                          .data[
+                                                                              index]
+                                                                          .images[
+                                                                              imageIndex]
+                                                                          .image
+                                                                          .toString() ??
+                                                                      'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png',
+                                                                  imageBuilder:
+                                                                      (context,
+                                                                              imageProvider) =>
+                                                                          GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(MaterialPageRoute(builder:
+                                                                              ((context) {
+                                                                        return ViewImage(
+                                                                            imageLink:
+                                                                                addReviewData.allReviewsModel.data[index].images[imageIndex].image);
+                                                                      })));
+                                                                    },
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(5)),
+                                                                      child:
+                                                                          Image(
+                                                                        height:
+                                                                            100,
+                                                                        width:
+                                                                            100,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        image:
+                                                                            imageProvider,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  placeholder:
+                                                                      (context,
+                                                                              url) =>
+                                                                          Image(
+                                                                    height: 100,
+                                                                    width: 100,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/png/pholder_image.jpg'),
+                                                                  ),
+                                                                  errorWidget:
+                                                                      (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Image(
+                                                                    height: 100,
+                                                                    width: 100,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image: AssetImage(
+                                                                        'assets/images/png/pholder_image.jpg'),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ))),
+                                                  Divider(
+                                                    color: Colors.grey,
+                                                    thickness: 0.1,
                                                   ),
+                                                ],
+                                              );
+                                            }),
+                                      ),
+                                      Visibility(
+                                        visible: addReviewData
+                                                .allReviewsModel.data.length >
+                                            5,
+                                        child: Column(
+                                          children: [
+                                            Divider(
+                                              color: Colors.grey,
+                                              thickness: 0.2,
+                                            ),
+                                            ListTile(
+                                              onTap: () {
+                                                Navigator.of(context).pushNamed(
+                                                    '/allreviewsscreen');
+                                              },
+                                              title: Text(
+                                                'All ${addReviewData.allReviewsModel.data.length.toString()} Reviews',
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w700,
                                                 ),
-                                              ],
-                                            );
-                                          }),
-                                    ),
-                                  ],
-                                );
-                              } else {
+                                              ),
+                                              trailing: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Divider(
+                                              color: Colors.grey,
+                                              thickness: 0.2,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                } else {
+                                  return SizedBox();
+                                }
+                              } else if (snapshot.hasError) {
                                 return SizedBox();
                               }
-                            } else if (snapshot.hasError) {
-                              return SizedBox();
-                            }
-                            return Center(
-                              child: CircularProgressIndicator(
-                                  color: primaryColor),
-                            );
-                          }),
+                              return Center(
+                                child: CircularProgressIndicator(
+                                    color: primaryColor),
+                              );
+                            });
+                      }),
+
                       FutureBuilder(
                           future: relatedProductsData.getRelatedProducts(
                               categoryId: productCategoryData.categoryId),
@@ -1667,4 +1827,86 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           }
         });
   }
+}
+
+Future<void> showPicImagePopup(
+    BuildContext context, VoidCallback camera, VoidCallback gallary) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Add Image',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: camera,
+                    child: Column(
+                      children: [
+                        Icon(Icons.camera_alt, size: 50, color: Colors.grey),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Camera',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  GestureDetector(
+                    onTap: gallary,
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.photo_library,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Gallery',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

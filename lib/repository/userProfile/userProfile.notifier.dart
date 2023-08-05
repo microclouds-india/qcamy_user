@@ -32,14 +32,17 @@ class UserProfileNotifier extends ChangeNotifier {
   }
 
   Future editUserProfile({
-    required String name,
+        required String name,
     required String phone,
+    required String gender,
+    required String email,
+    required String dob,
   }) async {
     loading(true);
     final String? token = await localStorage.getToken();
 
     try {
-      editUserProfileModel = await _userProfileNetworking.editUserProfile(token: token!, name: name, phone: phone);
+      editUserProfileModel = await _userProfileNetworking.editUserProfile(token:  token!, name: name, phone: phone, gender: gender, email: email, dob: dob);
     } catch (e) {
       return Future.error(e.toString());
     }

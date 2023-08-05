@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:qcamyapp/config/colors.dart';
+import 'package:intl/intl.dart';
 import 'package:qcamyapp/views/main.view.dart';
 import 'package:qcamyapp/widgets/view_image.widget.dart';
 
 import '../../../repository/userProfile/userProfile.notifier.dart';
 import '../../core/token_storage/storage.dart';
+import '../../repository/date picker/datepicker.dart';
 import 'photographerTabViews/photographerProfile.view.dart';
 
 class ProfileTabView extends StatefulWidget {
@@ -26,6 +28,10 @@ class _ProfileTabViewState extends State<ProfileTabView> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController gendarController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -39,6 +45,9 @@ class _ProfileTabViewState extends State<ProfileTabView> {
   Widget build(BuildContext context) {
     final userProfileData =
         Provider.of<UserProfileNotifier>(context, listen: false);
+
+    final datePickerProvider =
+        Provider.of<DateProvider>(context, listen: false);
 
     void selectImage() async {
       try {
@@ -55,10 +64,13 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                 content: Text("Profile image updated"),
               ),
             );
+            setState(() {});
+          }else{
+            setState(() {});
           }
         }
 
-        setState(() {});
+        
       } catch (e) {
         // ignore: avoid_print
         ScaffoldMessenger.of(context).showSnackBar(
@@ -71,6 +83,24 @@ class _ProfileTabViewState extends State<ProfileTabView> {
         // print(e);
       }
     }
+
+
+     Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = Provider.of<DateProvider>(context, listen: false).selectedDate;
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != initialDate) {
+      Provider.of<DateProvider>(context, listen: false).setDate(picked);
+      dobController.text = DateFormat('dd-MM-yyyy').format(picked);
+
+    }
+  }
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +122,12 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                   GestureDetector(
                       onTap: () async {
                         // selectImage();
-                        showDialog(
+                        nameController.text = userProfileData.userProfileModel.data[0].name;
+                        phoneController.text =userProfileData.userProfileModel.data[0].phone;    
+                        emailController.text = userProfileData.userProfileModel.data[0].email;
+                        gendarController.text = userProfileData.userProfileModel.data[0].gender;
+                        dobController.text = userProfileData.userProfileModel.data[0].dob;
+                                            showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
@@ -184,6 +219,104 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                                           ),
                                         ),
                                       ),
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                            BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 5)),
+                                          ],
+                                          border: Border.all(color: Colors.grey.withOpacity(0.05)),
+                                        ),
+                                        child: TextField(
+                                          controller: emailController,
+                                          maxLines: 1,
+                                          style: const TextStyle(color: Colors.black, fontSize: 13),
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            hintText: "Email",
+                                            counterText: "",
+                                            hintStyle: const TextStyle(color: grey),
+                                            contentPadding: const EdgeInsets.all(12),
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                            BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 5)),
+                                          ],
+                                          border: Border.all(color: Colors.grey.withOpacity(0.05)),
+                                        ),
+                                        child: TextField(
+                                          controller: gendarController,
+                                          maxLines: 1,
+                                          style: const TextStyle(color: Colors.black, fontSize: 13),
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            hintText: "Gender",
+                                            counterText: "",
+                                            hintStyle: const TextStyle(color: grey),
+                                            contentPadding: const EdgeInsets.all(12),
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ),
+                                      Consumer<DateProvider>(
+              builder: (context, dateProvider, _) {
+                return GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: Container(
+                                        margin: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                          boxShadow: [
+                                            BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 5)),
+                                          ],
+                                          border: Border.all(color: Colors.grey.withOpacity(0.05)),
+                                        ),
+                                        child: AbsorbPointer(
+                                          child: GestureDetector(
+                                            onTap: () => _selectDate(context),
+                                            child: TextField(
+                                              readOnly: true,
+                                              controller: dobController,
+                                              maxLines: 1,
+                                              keyboardType: TextInputType.number,
+                                              style: const TextStyle(color: Colors.black, fontSize: 13),
+                                              cursorColor: Colors.black,
+                                              decoration: InputDecoration(
+                                              enabled: true,
+                                                isDense: true,
+                                                fillColor: Colors.white,
+                                                filled: true,
+                                                
+                                                hintText: "Date of Birth",
+                                                counterText: "",
+                                                hintStyle: const TextStyle(color: grey),
+                                                contentPadding: const EdgeInsets.all(12),
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                );
+              },
+            ),
+                                      
                                       Consumer<UserProfileNotifier>(builder: (context, data, _) {
                                         return data.isLoading ? Container(
                                           width: 20,
@@ -208,10 +341,12 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                                           onTap: () async {
 
                                             if(nameController.text.isNotEmpty &&
+                                            gendarController.text.isNotEmpty&&
+                                            emailController.text.isNotEmpty&&
                                                 phoneController.text.isNotEmpty){
 
                                               await userProfileData.editUserProfile(name: nameController.text,
-                                                  phone: phoneController.text);
+                                                  phone: phoneController.text,email: emailController.text,gender: gendarController.text,dob: dobController.text);
 
                                               if (userProfileData.editUserProfileModel.status == "200") {
                                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -253,6 +388,9 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                                 ),
                               );
                             });
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                        //   return EditProfileScreen();
+                        // }));
                       },
                       child: Stack(
                         alignment: Alignment.center,
@@ -369,6 +507,13 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                     icon: Icons.gps_fixed,
                     onTap: () {
                       Navigator.of(context).pushNamed("/addressView");
+                    },
+                  ),
+                   DrawerItem(
+                    title: "Help Center",
+                    icon: Icons.help,
+                    onTap: () {
+                      Navigator.of(context).pushNamed("/helpPage");
                     },
                   ),
                   DrawerItem(

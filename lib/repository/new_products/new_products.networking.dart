@@ -7,18 +7,14 @@ class NewProductsNetworking {
   static const String urlENDPOINT =
       "https://cashbes.com/photography/apis/new_products";
 
-  final client = http.Client();
-
   late NewArrivalsModel newArrivalsModel;
 
   Future<NewArrivalsModel> getNewProducts({required String token}) async {
     try {
-      final request = await client.post(Uri.parse(urlENDPOINT), body: {
-        "token": token,
-      });
+      final request = await http.post(Uri.parse(urlENDPOINT),);
 
       if (request.statusCode == 200) {
-        final response = json.decode(request.body);
+        final response = jsonDecode(request.body);
         newArrivalsModel = NewArrivalsModel.fromJson(response);
       }
     } catch (e) {

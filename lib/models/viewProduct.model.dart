@@ -146,6 +146,7 @@ class Datum {
     required this.endDate,
     required this.sgst,
     required this.cgst,
+    required this.warranty,
     required this.taxPer,
     required this.wishlist_id,
   });
@@ -164,6 +165,7 @@ class Datum {
   String endDate;
   String cgst;
   String sgst;
+  String warranty;
   String taxPer;
   String wishlist_id;
 
@@ -180,6 +182,7 @@ class Datum {
         stock: json["stock"] ?? "",
         startDate: json["start_date"] ?? "",
         endDate: json["end_date"] ?? "",
+        warranty: json["warranty"]??"",
         taxPer: json["tax_per"] ?? "",
         cgst: json["cgst"] ?? "",
         sgst: json["sgst"] ?? "",

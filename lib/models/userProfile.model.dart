@@ -34,6 +34,7 @@ class Datum {
     required this.lat,
     required this.long,
     required this.profileImage,
+    required this.dob
   });
 
   String id;
@@ -44,6 +45,7 @@ class Datum {
   String lat;
   String long;
   String profileImage;
+  String dob;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"] ?? "",
@@ -54,6 +56,7 @@ class Datum {
         lat: json["lat"] ?? "",
         long: json["long"] ?? "",
         profileImage: json["profile_image"] ?? "",
+        dob: json["dob"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -65,5 +68,6 @@ class Datum {
         "lat": lat,
         "long": long,
         "profile_image": profileImage,
+        "dob": dob,
       };
 }

@@ -32,7 +32,10 @@ import 'package:qcamyapp/views/home/rentalShopsTabViews/searchRentalShops.view.d
 import 'package:qcamyapp/views/home/searchEquipment.dart';
 import 'package:qcamyapp/views/main.view.dart';
 import 'package:qcamyapp/views/splashscreen/splash.view.dart';
+import 'package:qcamyapp/views/tutorial/tutorialScreen.dart';
 
+import '../repository/select language/languageNotifier.dart';
+import '../views/all reviews/allreviews.dart';
 import '../views/authentication/profileSetup.view.dart';
 import '../views/home/drawerViews/firmware/search_firmware.view.dart';
 import '../views/home/drawerViews/my_rentals/rental_details.view.dart';
@@ -46,6 +49,8 @@ import '../views/home/rentalShopsTabViews/bookEquipment.view.dart';
 import '../views/home/rentalShopsTabViews/equipmentDetails.view.dart';
 import '../views/home/rentalShopsTabViews/searchEquipments.view.dart';
 import '../views/home/rentalShopsTabViews/showAllRentalShops.view.dart';
+import '../views/language/languageselectScreen.dart';
+import '../views/privecy policy/privecypolicy.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/splashView': (context) => const SplashView(),
@@ -66,7 +71,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   // '/usedProductsView': (context) => const UsedProductsView(),
   '/offerProductDetailsView': (context) => OfferProductDetailsView(),
   '/cartView': (context) => CartView(),
-  '/paymentOptionsView': (context) => const PaymentOptionsView(),
+  // '/paymentOptionsView': (context) => const PaymentOptionsView(),
   '/addAddressView': (context) => AddAddressView(),
   '/addressView': (context) => const AddressView(),
   '/selectAddressView': (context) => const SelectAddressView(),
@@ -95,4 +100,8 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/showExchangeProduct': (context) => const ShowExchangeProduct(),
   '/searchRentalProductView': (context) => const SearchRentalProductView(),
   '/helpPage': (context) => HelpPage(),
+  '/privecypolicy':(context) => const PrivecyPolicyScreen(),
+  '/allreviewsscreen':(context) => AllReviewsScreen(),
+  '/selectLanguage':(context) => LanguageSelectionScreen(), 
+  '/QuestionAnswerScreen':(context)=>QuestionAnswerScreen(),
 };

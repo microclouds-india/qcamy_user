@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:qcamyapp/models/editUserProfileModel.dart';
@@ -37,12 +38,18 @@ class UserProfileNetworking {
     required String token,
     required String name,
     required String phone,
+    required String gender,
+    required String email,
+    required String dob,
   }) async {
     try {
       final request = await client.post(Uri.parse(urlENDPOINTprofile_edit_user), body: {
         "token": token,
         "name": name,
         "phone": phone,
+        "gender":gender,
+        "dob":dob,
+        "email":email
       }).timeout(const Duration(seconds: 10));
 
       if (request.statusCode == 200) {

@@ -354,6 +354,39 @@ class MenuDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pushNamed("/showExchangeProduct");
                   }),
+                  Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Divider(
+                  color: Colors.grey.shade500,
+                  height: 1,
+                ),
+              ),
+              DrawerItem(
+                  title: "Choose Language",
+                  icon: Icons.language,
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/selectLanguage");
+                  }),
+                   Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Divider(
+                  color: Colors.grey.shade500,
+                  height: 1,
+                ),
+              ),
+               DrawerItem(
+                  title: "How to Use",
+                  icon: Icons.question_mark,
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/QuestionAnswerScreen");
+                  }),
+                   Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Divider(
+                  color: Colors.grey.shade500,
+                  height: 1,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Divider(
@@ -366,6 +399,19 @@ class MenuDrawer extends StatelessWidget {
                   icon: Icons.help,
                   onTap: () {
                     Navigator.of(context).pushNamed("/helpPage");
+                  }),
+                   Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Divider(
+                  color: Colors.grey.shade500,
+                  height: 1,
+                ),
+              ),
+                  DrawerItem(
+                  title: "Privacy Policy",
+                  icon: Icons.privacy_tip_rounded,
+                  onTap: () {
+                    Navigator.of(context).pushNamed("/privecypolicy");
                   }),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),

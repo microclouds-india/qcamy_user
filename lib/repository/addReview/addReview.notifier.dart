@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qcamyapp/core/token_storage/storage.dart';
 import 'package:qcamyapp/models/addReview.model.dart';
@@ -8,12 +10,15 @@ import 'package:qcamyapp/repository/help/help.networking.dart';
 
 
 class AddReviewNotifier extends ChangeNotifier {
-  final AddReviewNetworking _addReviewNetworking = AddReviewNetworking();
+  final AddReviewNetworking addReviewNetworking = AddReviewNetworking();
+
 
   late AddReviewModel addReviewModel;
   late AllReviewsModel allReviewsModel;
   LocalStorage localStorage = LocalStorage();
   bool isLoading = false;
+    bool get isFoundM=> isLoading;
+
   String ratingValue = "5.0";
 
   loading(bool isLoading) {
@@ -21,11 +26,11 @@ class AddReviewNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future addReviewData({required String rating, required String comment}) async {
+  Future addReviewData({required String rating, required String comment,required List<File> images,required String id}) async {
     loading(true);
     try {
       final String? token = await localStorage.getToken();
-      addReviewModel = await _addReviewNetworking.addReviewData(token: token!, rating: rating, comment: comment);
+      addReviewModel = await addReviewNetworking.addReviewData(token: token!, rating: rating, comment: comment,images: images,id: id);
       loading(false);
     } catch (e) {
       loading(false);
@@ -36,10 +41,10 @@ class AddReviewNotifier extends ChangeNotifier {
     return addReviewModel;
   }
 
-  Future allReviews() async {
+  Future allReviews(String id) async {
     loading(true);
     try {
-      allReviewsModel = await _addReviewNetworking.allReviews();
+      allReviewsModel = await addReviewNetworking.allReviews(id: id);
       loading(false);
     } catch (e) {
       loading(false);
